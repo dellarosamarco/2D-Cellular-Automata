@@ -1,9 +1,10 @@
 import Map
 
 map = Map.Map(
-    width = 55, 
-    height = 55,
+    width = 60, 
+    height = 60,
     cellSize = 6,
-    density = 15,
-    iterations = 3
-    )
+    density = 35,
+    iterations = 3,
+    biomeGeneration = False
+)

@@ -12,14 +12,17 @@ class Map :
         height, 
         cellSize,
         density,
-        iterations
+        iterations,
+        biomeGeneration
     ) : 
         self.width = width
         self.height = height
         self.cellSize = cellSize
         self.density = density
         self.iterations = iterations
+        self.biomeGeneration = biomeGeneration
 
+        #Generate map
         for x in range(0,self.width) : 
             for y in range(0,self.height) : 
                 fillCell = random.randint(0,100) < self.density
@@ -28,22 +31,26 @@ class Map :
 
         self.tempTiles = self.tiles[:]
 
-
+        #Iterations
         for n in range(0,self.iterations) :
             self.iterate()
-            #self.drawMap()
+            # self.drawMap()
             self.tiles = self.tempTiles[:]
                    
         self.drawMap()
 
     def iterate(self) : 
         for tile in self.tiles : 
-            if(self.countNeighbours(tile) >= 3) :
+            neighbours = self.countNeighbours(tile)
+            tileIndex = self.tiles.index(tile)
+            if(neighbours >= 4) :
                 #tile.active = True
-                self.tempTiles[self.tiles.index(tile)].active = True
+                self.tempTiles[tileIndex].active = True
             else : 
                 #tile.active = False
-                self.tempTiles[self.tiles.index(tile)].active = False
+                self.tempTiles[tileIndex].active = False
+
+            self.tempTiles[tileIndex].neighbours = neighbours
 
     def countNeighbours(self,tile) :
         neighboursCounter = 0
@@ -76,8 +83,11 @@ class Map :
         DISPLAY.fill((0,0,0))
 
         for tile in self.tiles : 
-            if(tile.active) :
-                pygame.draw.rect(DISPLAY,(255,255,255),(tile.x,tile.y,self.cellSize,self.cellSize))
+            if(self.biomeGeneration) :
+                pygame.draw.rect(DISPLAY,self.getBiome(tile),(tile.x,tile.y,self.cellSize,self.cellSize))
+            else : 
+                if(tile.active) :
+                    pygame.draw.rect(DISPLAY,(255,255,255),(tile.x,tile.y,self.cellSize,self.cellSize))
     
         while True:
             for event in pygame.event.get():
@@ -85,4 +95,23 @@ class Map :
                     pygame.quit()
                     sys.exit()
             pygame.display.update()
+
+    def getBiome(self,tile) : 
+        if(tile.active == False) :
+            return (30,30,190)
+
+        print(tile.neighbours)
+
+        beach = [1,2,3,4]
+        grass = [5,6]
+        forest = [7,8,9]
+
+        if(tile.neighbours in beach) :
+            return (120,255,0)
+        elif(tile.neighbours in grass) :
+            return (30,225,25)
+        elif(tile.neighbours in forest) :
+            return (45,255,85)
+        
+        return (255,255,255)
             
