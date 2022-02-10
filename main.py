@@ -1,10 +1,11 @@
 import Map
 
 map = Map.Map(
-    width = 60, 
-    height = 60,
+    width = 30, 
+    height = 30,
     cellSize = 6,
-    density = 35,
+    density = 45,
     iterations = 3,
-    biomeGeneration = False
+    biomeGeneration = True,
+    seed = "xilkj1jqljnca98sd"
 )

@@ -2,18 +2,20 @@ import Tile
 import pygame, sys
 from pygame.locals import *
 import random
+import utils
 
 class Map : 
     tiles = []
 
     def __init__(
         self, 
-        width, 
-        height, 
-        cellSize,
-        density,
-        iterations,
-        biomeGeneration
+        width = 25, 
+        height = 25, 
+        cellSize = 6,
+        density = 50,
+        iterations = 2,
+        biomeGeneration = False,
+        seed = None
     ) : 
         self.width = width
         self.height = height
@@ -21,7 +23,13 @@ class Map :
         self.density = density
         self.iterations = iterations
         self.biomeGeneration = biomeGeneration
+        self.seed = seed
 
+        if(self.seed == None) :
+            random.seed(utils.setRandomSeed())
+        else :
+            random.seed(self.seed)
+        
         #Generate map
         for x in range(0,self.width) : 
             for y in range(0,self.height) : 
@@ -100,8 +108,6 @@ class Map :
         if(tile.active == False) :
             return (30,30,190)
 
-        print(tile.neighbours)
-
         beach = [1,2,3,4]
         grass = [5,6]
         forest = [7,8,9]
@@ -114,4 +120,5 @@ class Map :
             return (45,255,85)
         
         return (255,255,255)
+        
             
